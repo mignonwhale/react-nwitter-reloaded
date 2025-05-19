@@ -16,3 +16,4 @@ Currently, two official plugins are available:
 - npm i styled-reset
 - npm i styled-components@6.0.7
 - npm i @types/styled-components -D
+- npm i firebase@10.1.0
