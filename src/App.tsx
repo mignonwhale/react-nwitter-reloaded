@@ -10,6 +10,7 @@ import { useEffect, useState } from "react"
 import LoadingScreen from "./components/loadingScreen"
 import { auth } from "./firebase"
 import ProtectedRoute from "./components/protected-route"
+import ResetPassword from "./components/reset-password"
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
     path: "/create-account",
     element: <CreateAccount />,
   },
+  {
+    path: "/reset-password",
+    element: <ResetPassword />,
+  },
 ])
 
 const GlobalStyles = createGlobalStyle`
@@ -62,7 +67,7 @@ const Wrapper = styled.div`
 function App() {
   const [isLoading, setIsLoading] = useState(true)
   const init = async () => {
-    await auth.authStateReady()
+    await auth.authStateReady() // 로그인 여부 확인
     setIsLoading(false)
   }
   useEffect(() => {

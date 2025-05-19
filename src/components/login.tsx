@@ -55,6 +55,9 @@ export default function Login() {
       <Switcher>
         Don't have an account? <Link to="/create-account">Create Account</Link>
       </Switcher>
+      <Switcher>
+        Forget your password? <Link to="/reset-password">send email for reset</Link>
+      </Switcher>
       <GithubButton />
     </Wrapper>
   )

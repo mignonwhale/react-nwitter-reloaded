@@ -18,6 +18,10 @@ Currently, two official plugins are available:
 - npm i @types/styled-components -D
 - npm i firebase@10.1.0
 
+# 이메일 인증
+
+- firebase > Authentication > 로그인 방법 선택
+
 # 소셜 인증 추가
 
 - firebase > Authentication > 로그인 방법 > 원하는 소셜 선택
