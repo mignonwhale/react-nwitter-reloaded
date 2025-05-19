@@ -17,3 +17,10 @@ Currently, two official plugins are available:
 - npm i styled-components@6.0.7
 - npm i @types/styled-components -D
 - npm i firebase@10.1.0
+
+# 소셜 인증 추가
+
+- firebase > Authentication > 로그인 방법 > 원하는 소셜 선택
+- 깃허브 선택 시
+  - 깃허브 OAuth app 생성 https://github.com/settings/developers
+  - 생성 정보를 firebase에 입력
