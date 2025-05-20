@@ -32,3 +32,14 @@ Currently, two official plugins are available:
 # 아이콘 참고
 
 [https://heroicons.com/](https://heroicons.com/)
+
+# 데이터베이스
+
+- Cloud Firestore = NoSQL database
+- [Cloud Firestore 시작](https://firebase.google.com/docs/firestore/quickstart?hl=ko&authuser=0&_gl=1*acs4dw*_ga*MTg4NTA3MjY2MC4xNzQ3NjQ1NzY5*_ga_CW55HF8NVT*czE3NDc3MzI4OTQkbzckZzEkdDE3NDc3MzM1ODQkajUyJGwwJGgwJGRUSkNHeUlUbzJyTXdZU0J6dVMtWmhpMGYwTmt3R0VJNVZR)
+
+# 파일저장소
+
+- Storage
+- 2025.05.20 현재는 유료버전만 사용가능하므로 무료크레딧으로 사용 추천
+- [Storage 시작](https://firebase.google.com/docs/storage/?hl=ko&authuser=0&_gl=1*cu8u7v*_ga*MTg4NTA3MjY2MC4xNzQ3NjQ1NzY5*_ga_CW55HF8NVT*czE3NDc3MzI4OTQkbzckZzEkdDE3NDc3MzM3NzMkajI4JGwwJGgwJGRUSkNHeUlUbzJyTXdZU0J6dVMtWmhpMGYwTmt3R0VJNVZR#implementation_path)
