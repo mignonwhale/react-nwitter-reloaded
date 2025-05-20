@@ -93,11 +93,8 @@ export default function PostTweetForm() {
       if (file) {
         // Storage에 업로드할 경로
         const locationRef = ref(storage, `/tweets/${user.uid}-${user.displayName}/${doc.id}`)
-
         const result = await uploadBytes(locationRef, file)
-
         const url = await getDownloadURL(result.ref)
-
         await updateDoc(doc, {
           image: url,
         })
