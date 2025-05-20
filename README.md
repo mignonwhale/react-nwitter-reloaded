@@ -28,3 +28,7 @@ Currently, two official plugins are available:
 - 깃허브 선택 시
   - 깃허브 OAuth app 생성 https://github.com/settings/developers
   - 생성 정보를 firebase에 입력
+
+# 아이콘 참고
+
+[https://heroicons.com/](https://heroicons.com/)
