@@ -6,12 +6,16 @@ const Wrapper = styled.div`
   grid-template-columns: 3fr 1fr;
   padding: 20px;
   border: 1px solid rgb(255, 255, 255, 0.5);
+  border-radius: 15px;
 `
-const Column = styled.div``
+const Column = styled.div`
+  &:last-child {
+    place-self: end;
+  }
+`
 const Username = styled.span`
   font-weight: 600;
   font-size: 15px;
-  color: white;
 `
 const Payload = styled.p`
   margin: 10px 0px;
@@ -30,11 +34,7 @@ export default function Tweet({ username, image, tweet }: ITweet) {
         <Username>{username}</Username>
         <Payload>{tweet}</Payload>
       </Column>
-      {image ? (
-        <Column>
-          <Image src={image} />
-        </Column>
-      ) : null}
+      <Column>{image ? <Image src={image} /> : null}</Column>
     </Wrapper>
   )
 }
