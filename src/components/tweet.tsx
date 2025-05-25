@@ -1,11 +1,10 @@
-import styled from "styled-components"
-import type { ITweet } from "./timeline"
-import { auth, db, storage } from "../firebase"
 import { deleteDoc, doc, updateDoc } from "firebase/firestore"
-import { deleteObject, ref } from "firebase/storage"
-import React, { useState } from "react"
-import { Link } from "react-router-dom"
-import PostTweetForm from "./post-tweet-form"
+import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage"
+import React, { useEffect, useRef, useState } from "react"
+import styled from "styled-components"
+import { auth, db, storage } from "../firebase"
+import type { ITweet } from "./timeline"
+import { getMultiFactorResolver } from "firebase/auth"
 
 const Wrapper = styled.div`
   display: grid;
@@ -15,7 +14,7 @@ const Wrapper = styled.div`
   border-radius: 15px;
 `
 const Column = styled.div`
-  &:last-child {
+  &.image-column {
     place-self: end;
   }
 `
@@ -42,16 +41,27 @@ const Button = styled.button`
   padding: 5px 10px;
   text-transform: uppercase;
   border-radius: 5px;
-  margin-right: 10px;
   cursor: pointer;
   &.edit {
     background-color: #1d9bf0;
+    margin-left: 10px;
   }
-  &.save {
+  &.saveImage {
+    background-color: black;
+    color: #1d9bf0;
+    border: 1px solid;
+  }
+  &.saveTweet {
     background-color: #1d9bf0;
-    margin: 10px;
   }
 `
+
+const EditRow = styled.div`
+  grid-column: 1 / -1; // 기본 2열그리드이자만 이 행은 1열로 보이도록 조정
+  display: flex;
+  align-items: center;
+`
+
 const TextArea = styled.textarea`
   border: 2px solid white;
   padding: 20px;
@@ -72,11 +82,35 @@ const TextArea = styled.textarea`
     border-color: #1d9bf0;
   }
 `
+// input의 디자인은 변경이 어려우므로 label로 묶어서 디자인을 변경하고 input type=file 기능을 공유한다.
+const AttachFileButton = styled.label`
+  padding: 10px 0px;
+  color: #1d9bf0;
+  text-align: center;
+  border-radius: 5px;
+  border: 1px solid #1d9bf0;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-transform: uppercase;
+`
+const AttachFileInput = styled.input`
+  display: none;
+`
+
+const EditButton = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-left: 10px;
+`
 
 export default function Tweet({ username, image, tweet, userId, id }: ITweet) {
   const user = auth.currentUser
   const [isEditing, setIsEditing] = useState(false)
   const [newTweet, setNewTweet] = useState(tweet)
+  const textAreaRef = useRef<HTMLTextAreaElement | null>(null)
+
   const deletTweet = async () => {
     const ok = confirm("Are you sure to delete this tweet?")
     if (!ok || user?.uid !== userId) {
@@ -100,9 +134,41 @@ export default function Tweet({ username, image, tweet, userId, id }: ITweet) {
     setIsEditing(true)
   }
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    console.log(e.target.value)
+
     setNewTweet(e.target.value)
   }
+
+  const saveImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const user = auth.currentUser
+    const { files } = e.target
+
+    if (!user || !files || !confirm("Are you sure to change your image?")) {
+      e.target.value = ""
+      return
+    }
+
+    try {
+      if (files && files.length === 1) {
+        // 새파일 업로드
+        // Storage에 업로드할 경로
+        const locationRef = ref(storage, `/tweets/${user.uid}/${id}`)
+        const result = await uploadBytes(locationRef, files[0])
+        const url = await getDownloadURL(result.ref)
+
+        // 이미 url 변경
+        const editRef = doc(db, "tweets", id)
+        await updateDoc(editRef, {
+          image: url,
+        })
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
   const saveTweet = async () => {
+    console.log(newTweet)
+
     if (!newTweet || user?.uid !== userId) {
       return
     }
@@ -119,6 +185,12 @@ export default function Tweet({ username, image, tweet, userId, id }: ITweet) {
     }
   }
 
+  useEffect(() => {
+    if (isEditing && textAreaRef.current) {
+      textAreaRef.current.focus()
+    }
+  }, [isEditing])
+
   return (
     <Wrapper>
       <Column>
@@ -130,16 +202,22 @@ export default function Tweet({ username, image, tweet, userId, id }: ITweet) {
             edit
           </Button>
         ) : null}
-        {isEditing ? (
-          <>
-            <TextArea required rows={5} maxLength={180} value={newTweet} onChange={onChange} />
-            <Button className="save" onClick={saveTweet}>
-              save
-            </Button>
-          </>
-        ) : null}
       </Column>
-      <Column>{image ? <Image src={image} /> : null}</Column>
+      <Column className="image-column">{image ? <Image src={image} /> : null}</Column>
+      {isEditing ? (
+        <EditRow>
+          <TextArea ref={textAreaRef} required rows={5} maxLength={180} value={newTweet} onChange={onChange} />
+          <EditButton>
+            <AttachFileButton className="saveImage" htmlFor="nweFile">
+              {image ? "update image" : "post image"}
+            </AttachFileButton>
+            <AttachFileInput onChange={saveImage} id="nweFile" type="file" accept="image/*" />
+            <Button className="saveTweet" onClick={saveTweet}>
+              update tweet
+            </Button>
+          </EditButton>
+        </EditRow>
+      ) : null}
     </Wrapper>
   )
 }
