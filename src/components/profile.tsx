@@ -29,11 +29,6 @@ const AvatarInput = styled.input`
   display: none;
 `
 
-const Name = styled.span`
-  font-weight: 600;
-  font-size: 22px;
-`
-
 const Tweets = styled.div`
   width: 100%;
   display: flex;
@@ -41,11 +36,32 @@ const Tweets = styled.div`
   gap: 10px;
 `
 
+const NameEdit = styled.div`
+  display: flex;
+`
+const NameInput = styled.input`
+  background-color: black;
+  border: 1px solid white;
+  color: white;
+`
+const NameInputButton = styled.div`
+  width: 20px;
+  height: 20px;
+  margin-left: 5px;
+`
+
+const Name = styled.span`
+  font-weight: 600;
+  font-size: 22px;
+`
+
 export default function Profile() {
   const user = auth.currentUser
 
   const [avatar, setAvatar] = useState(user?.photoURL)
   const [tweets, setTweets] = useState<ITweet[]>([])
+  const [newName, setNewName] = useState("")
+  const [isEditing, setIsEditing] = useState(!user?.displayName)
 
   const onChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target
@@ -64,6 +80,25 @@ export default function Profile() {
       await updateProfile(user, {
         photoURL: url,
       })
+    }
+  }
+
+  const onClick = () => {
+    setIsEditing(true)
+  }
+
+  const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newName = e.target.value
+    setNewName(newName)
+  }
+
+  const onClickNameButton = async () => {
+    if (!user || !newName) return
+    try {
+      await updateProfile(user, { displayName: newName })
+      setIsEditing(false)
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -99,7 +134,18 @@ export default function Profile() {
         )}
       </AvatarUpload>
       <AvatarInput id="avatar" type="file" accept="image/*" onChange={onChange} />
-      <Name>{user?.displayName ?? "Anonymous"}</Name>
+      {isEditing ? (
+        <NameEdit>
+          <NameInput type="text" value={newName} onChange={onChangeName} />
+          <NameInputButton onClick={onClickNameButton}>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+          </NameInputButton>
+        </NameEdit>
+      ) : (
+        <Name onClick={onClick}>{user?.displayName ?? "Anonymous"}</Name>
+      )}
       <Tweets>
         {tweets.map((tweet) => {
           return <Tweet key={tweet.id} {...tweet} />
