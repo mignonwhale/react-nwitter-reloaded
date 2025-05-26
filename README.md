@@ -43,3 +43,68 @@ Currently, two official plugins are available:
 - Storage
 - 2025.05.20 현재는 유료버전만 사용가능하므로 무료크레딧으로 사용 추천
 - [Storage 시작](https://firebase.google.com/docs/storage/?hl=ko&authuser=0&_gl=1*cu8u7v*_ga*MTg4NTA3MjY2MC4xNzQ3NjQ1NzY5*_ga_CW55HF8NVT*czE3NDc3MzI4OTQkbzckZzEkdDE3NDc3MzM3NzMkajI4JGwwJGgwJGRUSkNHeUlUbzJyTXdZU0J6dVMtWmhpMGYwTmt3R0VJNVZR#implementation_path)
+
+# 빌드 & 배포
+
+- Build > Hosting
+
+- [Hosting 시작](https://console.firebase.google.com/project/nwitter-reloaded-a595b/hosting/sites/nwitter-reloaded-a595b)
+- node version 20 이상이어야 firebase hosting을 사용할 수 있음
+
+```
+nvm install 20
+nvm use 20.19.2
+node -v
+```
+
+- 설치
+
+```
+npm install -g firebase-tools
+```
+
+- 로그인 명령어를 치면 웹으로 firebase hosting cli를 사용할 수 있도록 로그인 화면이 연결된다.
+
+```
+firebase login
+```
+
+- 빌드 폴더 초기화 작업
+
+```
+> firebase init
+
+✔ Which Firebase features do you want to set up for this directory?
+  - Hosting 선택
+
+? Please select an option
+ - Use an existing project 선택 후 내 프로젝트 선택
+
+? What do you want to use as your public directory? (public)
+- `npm run build`를 하면 생성되는 디렉토리인 dist를 입력
+
+? Configure as a single-page app (rewrite all urls to /index.html)?
+- Y
+
+? Set up automatic builds and deploys with GitHub? (Y/n)
+- n 필요할때 추가
+
+✔ File dist/index.html already exists. Overwrite?
+- Y
+
+```
+
+- 배포스크립트 추가, package.json
+
+```
+    "predeploy": "npm run build",
+    "deploy": "firebase deploy"
+```
+
+- 배포 실행 및 확인
+
+```
+npm run deploy
+
+Hosting URL: https://nwitter-reloaded-a595b.web.app
+```
