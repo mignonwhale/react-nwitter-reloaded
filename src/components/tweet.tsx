@@ -4,7 +4,6 @@ import React, { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
 import { auth, db, storage } from "../firebase"
 import type { ITweet } from "./timeline"
-import { getMultiFactorResolver } from "firebase/auth"
 
 const Wrapper = styled.div`
   display: grid;
