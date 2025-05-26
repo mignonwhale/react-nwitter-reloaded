@@ -108,3 +108,18 @@ npm run deploy
 
 Hosting URL: https://nwitter-reloaded-a595b.web.app
 ```
+
+# Security Rules
+
+- database나 storage에 rule을 생성하여 보안 및 제약 생성
+- 읽기, 쓰기, 저장 조건을 넣을 수 있음
+- [database rules](https://console.firebase.google.com/project/nwitter-reloaded-a595b/firestore/databases/-default-/rules)
+- [storage rules](https://console.firebase.google.com/project/nwitter-reloaded-a595b/storage/nwitter-reloaded-a595b.firebasestorage.app/rules)
+
+# API Key Security
+
+- [cloud> 사용자인증정보](https://console.cloud.google.com/apis/credentials?inv=1&invt=Abya3g&project=nwitter-reloaded-a595b)
+
+- 해당 프로젝트의 API 키 클릭
+- 애플리케이션 제한사항: 웹사이트로만 제한
+- 웹사이트 제한사항: 현재 프로젝트의 hosting url입력 => 이렇게 하면 local 접속은 제한이 되므로 개발기간에는 local url도 추가
